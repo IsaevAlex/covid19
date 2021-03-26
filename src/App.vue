@@ -1,15 +1,29 @@
 <template>
   <div id="app">
-    <VWorldMap></VWorldMap>
+    <vWorldMap></vWorldMap>
     <router-view/>
   </div>
 </template>
 
 <script>
-import VWorldMap from '@/components/v-world-map'
+import { mapActions } from 'vuex'
+import vWorldMap from '@/components/v-world-map'
 export default {
   components: {
-    VWorldMap
+    vWorldMap
+  },
+  mounted () {
+    this.getSummary()
+  },
+  methods: {
+    ...mapActions(['GET_SUMMARY']),
+    async getSummary () {
+      try {
+        await this.GET_SUMMARY()
+      } catch (err) {
+        console.log(err)
+      }
+    }
   }
 }
 </script>

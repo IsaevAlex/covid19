@@ -1,15 +1,50 @@
 <template>
   <div class="worldmap">
-    <vue-world-map countryStrokeColor="red" id="worldmap"  ></vue-world-map>
+    <world-map-vue
+      :country-data="countryData"
+      :show-overlay="showMapOverlay"
+      @mouseenter="onMouseEnterMapCountry"
+      @mouseleave="onMouseLeaveMapCountry"
+    >
+      <template v-slot:overlay>
+        <p>{{ contryInfo }}</p>
+      </template>
+    </world-map-vue>
   </div>
 </template>
 
 <script>
-import VueWorldMap from 'vue-world-map'
+import { mapGetters } from 'vuex'
+import worldMapVue from 'world-map-vue'
 export default {
   name: 'v-world-map',
   components: {
-    VueWorldMap
+    worldMapVue
+  },
+  data () {
+    return {
+      countryData: {
+        US: '#2200AA',
+        CA: 'red',
+        UK: 'rgba(200, 200, 255, 0.1)'
+      },
+      showMapOverlay: false,
+      contryInfo: {}
+    }
+  },
+  computed: {
+    ...mapGetters([
+      'GET_SUMMARY_COUNTRIES'
+    ])
+  },
+  methods: {
+    onMouseEnterMapCountry (countryCode) {
+      this.showMapOverlay = true
+      this.contryInfo = this.GET_SUMMARY_COUNTRIES.find(x => x.countryCode === countryCode)
+    },
+    onMouseLeaveMapCountry () {
+      this.showMapOverlay = false
+    }
   }
 }
 </script>
